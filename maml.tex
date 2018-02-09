@@ -1,0 +1,102 @@
+\section{Model Agnostic Meta Learning by Finn et al. 2017}
+
+\subsection{Summary:}
+
+\textbf{Goal:} train a model on a set of learning tasks such that it can solve
+novel learning tasks using a small number of training samples.
+
+Meta-learning should be general to the task and model.
+
+MAML does not introduce more parameters or place constraints on model architecture.
+
+MAML increases the sensitivity loss functions to new tasks i.e. small parameter changes cause large loss improvements.
+
+\subsection{Model:}
+
+Uses entire tasks as training examples. 
+
+Let a model $f_\theta: x \rightarrow a$ where $x$ is an observation and $a$ is an output. 
+
+A task $T$ is defined as $T = \{ L(x_1, a_1, \dots, x_H, a_H), q(x_1), q(x_{t+1} \mid x_t, a_t), H \}$
+where $L$ is a loss function, $q(x_1)$ is a distribution over initial observations $q(x_1)$,
+$q(x_{t+1} \mid x_t, at)$ is a transition distribution and $H$ is the episode length.
+
+Note: this formulation is like a reinforcement learning problem expect we assume to have the transition function?
+
+Let $p(T)$ be a a distribution over tasks we want the model to adapt to.
+
+\subsection{Training:}
+
+\begin{enumerate}
+\item A task $T_i \sim p(T)$
+\item the model $f_\theta$ is trained with $K$ samples using feedback from $L_{T_i}$
+\item $f$ is tested on new samples from $T_i$
+\item $f$ is improved by considering how the test error on new data from $q_i$ changes w.r.t the parameters
+\end{enumerate}
+
+In a sense the test error on sampled tasks is used as the training error for meta-learning.
+
+Tasks used in meta-testing are held out during meta-training to remain "unbiased?"
+
+\textbf{while} not done \textbf{do}
+\begin{block}
+Sample batch of tasks $T_I \sim p(T)$ \\
+\textbf{for all $T_i$ do} \\
+    \begin{block}
+    Evaluate $\Delta_{\theta}L_{T_i}(f_\theta)$ with respect to $K$ examples.\\
+    Compute adapted parameters with GD: $\theta_{i}^{'} = \theta - \alpha \Delta_{\theta}L_{T_i}(f_\theta)$
+    \end{block}
+\end{block}
+
+The meta learning objective is as follows:
+$$\min_{\theta} \sum_{T_i \sim p(T)} L_{T_i}(f_{\theta_{i}^{'}}) =
+\sum_{T_i \sim p(T)} L_{T_i}(f_{\theta - \alpha \Delta_{\theta}L_{T_i}(f_\theta)})$$
+
+Meta-optimization is done as follows:
+$$\theta \leftarrow \theta - \beta \Delta_{\theta} \sum_{T_i \sim p(T)} L_{T_i}(f_{\theta_{i}^{'}})$$
+
+For reinforcement learning focused problems the loss is of the form:
+
+$L_{T_i}(f_\phi) = \e{x_t, a_t \sim f_\phi, q_{T_i}}{\sum_{t=0}^{H} R_i(x_t, a_t) }$
+
+This is used in the context of policy gradient methods, which are on policy. Since they are
+on policy, each additional gradient step requires sampling from the current policy $f_{\theta_{i}^{'}}$.
+
+\subsection{Experiments:}
+
+Comparisons are made between MAML, pre-training on all tasks, and an oracle (best possible performance).
+
+\begin{enumerate}
+    \item Tasks: Regression from input to output of sine function where amplitude and phase of sine vary for tasks.
+          Result: Very low MSE for MAML and very high MSE for pre-trained model.
+    \item Tasks: Few shot classification on Omniglot and MiniImagenet. Result: near perfect accuracy on Omniglot and
+          best MiniImagenet accuracy by 3-5 percent.
+    \item Tasks: Continuous control environments for reinforcement learning where goal is to run in a particular
+          direction or at a particular velocity. Result: outperforms pre-training by a large margin and almost reaches
+          oracle performance.
+\end{enumerate}
+
+\subsection{My Conclusions: (concerns, follow up, etc)}
+
+What are important applications of MAML:
+\begin{itemize}
+    \item Language models? To quickly adapt to different language pairs in translation for instance ?
+    \item Could this be applied Bayesian models also?
+    \item Speech recognition with different accents or languages ?
+    \item Hierarchical reinforcement learning ? Adaption to multiple tasks and come up with a general
+          hierarchical structure?
+\end{itemize}
+
+Concerns:
+\begin{itemize}
+    \item Can this be run in real time for robotics application ?
+    \item How much training data do you need for this method? How many tasks / samples per task?
+    \item Is this still helpful when you have a lot of data? For example, as a pre-training method for Imagenet.
+\end{itemize}
+
+Follow up:
+\begin{itemize}
+    \item How does the model architecture effect the performance of MAML?
+    \item Is it helpful if the model "remembers" things across tasks?
+    \item How well does this work with recurrent / memory networks?
+\end{itemize}

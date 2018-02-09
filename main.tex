@@ -1,0 +1,43 @@
+\documentclass[12pt]{article}
+\input{preamble/preamble}
+\input{preamble/preamble_acronyms}
+\input{preamble/preamble_math}
+\input{preamble/preamble_tikz}
+
+\title{%
+\textbf{A collection of notes}
+}
+
+\author{
+Jason Krone \\
+Columbia University \\
+}
+
+\begin{document}
+
+\maketitle
+\bigskip
+
+\input{abstract}
+
+\clearpage
+\glsresetall{}
+
+\tableofcontents
+\clearpage
+\glsresetall{}
+
+\input{maml}
+
+\clearpage
+\glsresetall{}
+
+\bibliographystyle{apalike}
+\bibliography{bib}
+
+\clearpage
+\appendix
+
+%\input{sec_appendix}
+
+\end{document}
