@@ -1,0 +1,47 @@
+\section{hindsight Experience Replay by Marcin Andrychowicz et al. 2018}
+
+\subsection{Summary:}
+
+Hindsight Experience Replay (HER) is a technique related to reward shaping, which
+"replays" a trajectory with a set of "goals" that may differ from the actual goal 
+in order to improve learning efficiency. A design choice that must be made when using her
+is what additional goals to use. 
+
+\subsection{Model:}
+In this framework, each goal $g$ corresponds to a reward function $r_g : S \times A \rightarrow R$.
+In addition, the agent receives as input the goal at each time-step.
+HER parameterizes the action-value function $Q$ with a goal $g$
+i.e. $Q^{\pi}(s_t, a_t, g) = \mathbb{E}_{\pi, p(s_0)}[G_t \mid s_t, a_t, g]$.
+
+\subsection{Training:}
+HER can be trained using any off-policy reinforcement learning algorithm such as 
+DQN, DDPG, NAF, and SDQN. Training proceeds as follows for each episode:
+\begin{itemize}
+\item Sample a goal $g$, initial state $s_0$, and roll out policy
+\item Store trajectory transitions $(s_t \mid g, a_t, r_t, s_{t+1} \mid g)$ with original goal $g$ and other goals $g'$ in replay buffer
+\item Sample a mini batch $B$ from replay buffer
+\item Perform one step of optimization using algorithm $A$ and mini batch $B$
+\en{itemize}
+
+\subsection{Experiments:}
+This paper evaluated the model on the following three tasks using the Mujoco simulator 
+with a 7-DOF Fetch robotics arm:
+\begin{enumerate}
+\item Pushing
+\item Sliding
+\item Pick-and-place
+\end{enumerate}
+
+\subsection{My Conclusions: (concerns, follow up, etc)}
+\begin{itemize}
+\item The actions used in the paper are 4-dimensional and specify the desired position of the gripper at the next time step. 
+I am unsure if the gripper will deterministically move to this position at the next time step or not. If so, this seems
+a bit simplistic. Can the algorithm accommodate higher dimensional action spaces or must you relay on a method to get
+to a specific position ? 
+\item What does the "future" version (where $g'$ is from the same episode being replayed and is a state observed after it)
+of the algorithm really do? Does it refer to the current state?
+\item How could this interact with imitation learning? Could this augment imitation learning somehow? 
+\item When else is it useful to parameterize the $Q$ function with goals?
+\end{itemize}
+
+
