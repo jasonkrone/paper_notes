@@ -1,0 +1,50 @@
+\section{A Simple Neural Attentive Meta-Learner by Nikhil Mishra et al. 2018}
+
+\subsection{Summary:}
+Claim: most meta-learning approaches are hand crafted to a degree, either in terms of the 
+architecture or algorithm. To solve this issue the authors propose a Simple Neural Attentive
+Meta-Learner (SNAIL), which uses temporal convolutions and soft attention. Methods that are less 
+hand designed are likely to perform better because the optimal strategy will very over task distributions
+and therefore you must be able to adapt the strategy. 
+
+\subsection{Notation:}
+
+Each task $T_i$ is defined by inputs $x_t$, outputs $a_t$, a loss function $L_i(x_t, a_t)$, a
+transition distribution $(P_i(x_t \mid x_{t - 1}, a_{t - 1})$, and an episode length $H_i$.
+The aim is to minimize the expected loss over tasks with respect to $\theta$ (the model parameters) i.e.
+$$\min_\theta \e{T_i \sim T}{\sum_{t = 0}^{H_i} L_i(x_t, a_t)}$$
+where
+$$x_t \sim P_i(x_t \mid x_{t - 1}, a_{t - 1}), a_t \sim \pi(a_t \mid x_1, \dots, x_t ; \theta)$$ \\
+
+The meta-learner is trained on a mini-batch of tasks sampled from $T$, and it is evaluated on a held out
+set of tasks $\hat T$ that is similar to the training tasks distribution.
+
+\subsection{Model:}
+
+\begin{itemize}
+\item Temporal Convolutions: allow for aggregation of contextual information from past experience. In this
+context causal means \textbf{only influenced by past timesteps and not future ones}. A current deficiency 
+with temporal convolutions is that the "to scale to long sequences, the dilation rates generally increase
+exponentially, so the required layers scale logarithmically with the sequence length ... their bounded 
+capacity and positional dependence can be undesirable."
+
+\item Soft Attention: allow it to focus on pieces of information within that context. However, 
+      soft attention suffers from a lack of positional dependence, which is an even larger problem
+      for reinforcement learning where in observations, actions, and rewards are sequential. 
+\end{itemize}
+
+
+
+\subsection{Training:}
+
+\subsection{Experiments:}
+
+\subsection{My Conclusions: (concerns, follow up, etc)}
+
+\begin{itemize}
+    \item Not sure I agree with their claim that the current meta-learning approaches are hand-designed.
+          TODO: think about this in context of previous work.
+    \item TODO: read about temporal convolutions
+\end{itemize}
+
+

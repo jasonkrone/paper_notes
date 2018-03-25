@@ -1,4 +1,4 @@
-\section{hindsight Experience Replay by Marcin Andrychowicz et al. 2018}
+\section{Hindsight Experience Replay by Marcin Andrychowicz et al. 2018}
 
 \subsection{Summary:}
 
@@ -21,7 +21,7 @@ DQN, DDPG, NAF, and SDQN. Training proceeds as follows for each episode:
 \item Store trajectory transitions $(s_t \mid g, a_t, r_t, s_{t+1} \mid g)$ with original goal $g$ and other goals $g'$ in replay buffer
 \item Sample a mini batch $B$ from replay buffer
 \item Perform one step of optimization using algorithm $A$ and mini batch $B$
-\en{itemize}
+\end{itemize}
 
 \subsection{Experiments:}
 This paper evaluated the model on the following three tasks using the Mujoco simulator 

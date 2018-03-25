@@ -1,13 +1,34 @@
-\section{PAPER TITLE by AUTHOR et al. YEAR}
+\section{Dynamic Routing Between Capsules by Sabour et al. 2017}
 
 \subsection{Summary:}
+Capsules aim to solve to problem of routing information in neural networks, currently done
+poorly by max-pooling, which throws away most information.
 
 \subsection{Model:}
+
+The model is a parse tree that is carved out of a fixed multi-layer neural network, which is divided in to capsules.
+Each capsule represents propoerties of the object, such as class, position, albedo, texture, etc, seen in a single fixation.
+Specifically, the length of the vector (norm) indicates the existance of the entity. 
+
+All but the last layer of capsules are convolutional - to ensure that knowledge about good weight values is shared
+between positions. Low level capsules "place coded" information i.e. the capsule that fires indicates properities and
+higher level capsules are "rate coded" i.e. the scalar values indicate higher level properties. 
+
+The following "squashing" function is used to determine the "length" of a vector. Note that we want
+short vectors to have length near 0 and long vectors to have length near 1.
+
+$$v_j = \frac{\mid \mid s_j \mid \mid^2}{1 + \mid \mid s_j \mid \mid^2}\frac{s_j}{\mid \mid s_j \mid \mid}$$
+
+here $v_j$ is the vector output of capsule $j$ and $s_j$ is its total input.
+
+For every layer after the first, the input $s_j$ is a weighted sum of "prediction vectors" from the capsules in the 
+previous layers. The prediction vectors are obtained by multiplying the output $u_i$ of a capsule by $W_{ij}$.
+Namely, "prediction vector" $\hat u_{j \mid i} = W_{ij} u_i$. These "prediction vectors" are weighted by 
+coupling coefficients $c_{ij}$ that are determined by the dynamic routing process to create the input to capsule $j$ i.e.
+$s_j = \sum_{i} c_{ij}\hat u_{j \mid i}$
 
 \subsection{Training:}
 
 \subsection{Experiments:}
 
 \subsection{My Conclusions: (concerns, follow up, etc)}
-
-

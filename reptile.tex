@@ -39,7 +39,7 @@ However when $k > 1$ then the Reptile update is different than taking the deriva
 \subsubsection{Sign Wave Regression:}
 
 The task is to predict $y$ value given $x$ for a sign wave $\tau_i$ with certain amplitude and phase.
-Where $L_{\tau} = \integral_{-5}^{5} dx \mid f(x) - f_{\tau}(x) \mid^2$, which is evaluated using 50 equally spaced points.
+Where $L_{\tau} = \int_{-5}^{5} dx \mid f(x) - f_{\tau}(x) \mid^2$, which is evaluated using 50 equally spaced points.
 Training on the expected loss $\mathbb{E}_\tau[L_\tau]$ would not work because this loss is minimized by $f(x) = 0, \forall x$.
 Therefore, it is promising that after training reptile converges instead to a sign wave that is close to the function $f_{\tau}$.
 
